@@ -31,8 +31,8 @@ class Grafo {
  public:
   explicit Grafo(const std::string& filepath);
 
-  // getter
+  // getters
   bool esdirigido() const;
-  void actualizargrafo(const std::string& basic_string_1);
+  void actualizargrafo(const std::string& basic);
 };
 #endif //OPTI_GRAFO_H
