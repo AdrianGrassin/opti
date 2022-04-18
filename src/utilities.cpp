@@ -10,15 +10,16 @@
 
 void menu(bool dirigido, char &opcion, const std::string &grafo) {
   system("CLS");
+
   if (dirigido) {
     std::cout << "GRAFO CARGADO:" + grafo + "\n"
     "╔═════════════════════════════════════════════╗\n"
     "║ OPTIMIZACION 2022 ---- GRAFOS               ║\n"
-    "║                                             ║\n"
+    "╠═════════════════════════════════════════════╣\n"
     "║ MENU DE OPCIONES                            ║\n"
     "║ c. [c]argar grafo desde fichero             ║\n"
     "║ q. [q]uit / finalizar el programa           ║\n"
-    "║                                             ║\n"
+    "╠═════════════════════════════════════════════╣\n"
     "║ MENU DE GRAFO                               ║\n"
     "║ i. Mostrar [i]nfo                           ║\n"
     "║ s. Mostrar [s]ucesores                      ║\n"
@@ -27,13 +28,14 @@ void menu(bool dirigido, char &opcion, const std::string &grafo) {
     "OPCION > ";
     std::cin >> opcion;
   } else {
+    std::cout << "GRAFO CARGADO:" + grafo + "\n"
     "╔═════════════════════════════════════════════╗\n"
     "║ OPTIMIZACION 2022 ---- GRAFOS               ║\n"
-    "║                                             ║\n"
+    "╠═════════════════════════════════════════════╣\n"
     "║ MENU DE OPCIONES                            ║\n"
     "║ c. [c]argar grafo desde fichero             ║\n"
     "║ q. [q]uit / finalizar el programa           ║\n"
-    "║                                             ║\n"
+    "╠═════════════════════════════════════════════╣\n"
     "║ MENU DE GRAFO                               ║\n"
     "║ i. Mostrar [i]nfo                           ║\n"
     "║ a. Mostrar [a]dyacencia                     ║\n"

@@ -19,22 +19,28 @@ class Grafo {
   bool dirigido;   // 0 -> no dirigido
   std::string path;
 
-  unsigned int n;  // numero de nodos
-  unsigned int m;  // numero de arcos
+  unsigned n;  // numero de nodos
+  unsigned m;  // numero de arcos
 
-  std::vector<NodeAdyacence> ListaSucesores;      // Adyacencia de sucesores.
+  std::vector<NodeAdyacence> ListaSucesores;      // Adyacencia de sucesores o lista de adyacencia.
   std::vector<NodeAdyacence> ListaPredecesores;   // Adyacencia de predecesores.
   std::vector<NodeAdyacence> MatrizAdyacencia;    // Adyacencia y costes.
 
   void destroy();
-  void build(const std::ifstream& file, const std::string& pathname);
+  void build(std::ifstream& file, const std::string& pathname);
 
  public:
+  //Constructores y modificadores de la clase
   explicit Grafo(const std::string& filepath);
+  void actualizargrafo(std::string& nuevografo);
 
   // getters
   bool esdirigido() const;
-  void actualizargrafo(std::string& nuevografo);
   const std::string &pathto();
+
+  // funciones del menu
+  void showadyacencia();
+  void showinfo();
+
 };
 #endif //OPTI_GRAFO_H

@@ -21,7 +21,7 @@
 
 int main(int argc, char **argv) {
   SetConsoleOutputCP( 65001 );
-  typewrite("Grafos 2022: Adrian Grassin -> Practica 1");
+//typewrite("Grafos 2022: Adrian Grassin -> Practica 1");
   Sleep(500);
 
   std::string pathtofile;
@@ -51,22 +51,18 @@ int main(int argc, char **argv) {
 
           break;
         case 'i':
-          if(G.esdirigido()){
-
-          } else {
-
-          }
+          G.showinfo();
           break;
         case 'a':
           if(G.esdirigido()){
             std::cout << "No soportado para este tipo de grafo.";
           } else {
-            // codigo de no dirigido
+            G.showadyacencia();
           }
           break;
         case 's':
           if(G.esdirigido()){
-            // codigo de dirigido
+            G.showadyacencia();
           } else {
             std::cout << "No soportado para este tipo de grafo.";
           }
