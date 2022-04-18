@@ -12,11 +12,12 @@ typedef struct {
   int c;      // peso
 } ElementoLista;
 
-typedef std::vector<ElementoLista> NodeAdyacence;
+typedef std::vector<ElementoLista> NodeAdyacence;  // vector de nodos adyacentes multiproposito
 
 class Grafo {
  private:
   bool dirigido;   // 0 -> no dirigido
+  std::string path;
 
   unsigned int n;  // numero de nodos
   unsigned int m;  // numero de arcos
@@ -26,13 +27,14 @@ class Grafo {
   std::vector<NodeAdyacence> MatrizAdyacencia;    // Adyacencia y costes.
 
   void destroy();
-  void build(const std::ifstream& file);
+  void build(const std::ifstream& file, const std::string& pathname);
 
  public:
   explicit Grafo(const std::string& filepath);
 
   // getters
   bool esdirigido() const;
-  void actualizargrafo(const std::string& basic);
+  void actualizargrafo(std::string& nuevografo);
+  const std::string &pathto();
 };
 #endif //OPTI_GRAFO_H

@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   try {
     Grafo G(pathtofile);
     while(opciones != 'q'){
-      menu(G.esdirigido(), opciones, pathtofile);
+      menu(G.esdirigido(), opciones, G.pathto());
       switch(opciones){
         case 'c':
           system("CLS");
