@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
           break;
         case 'p':
           if(G.esdirigido()){
-          // codigo de dirigido
+          G.showpredecesores();
           } else {
             std::cout << "No soportado para este tipo de grafo.";
           }

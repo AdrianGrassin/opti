@@ -69,8 +69,19 @@ void Grafo::build(std::ifstream &file, const std::string &pathname) {
     }
   }
 
-  else {
-
+  else { // construir LP
+    ListaPredecesores.resize(n);
+    for (i = 0; i < ListaSucesores.size(); i++) {
+      if (ListaSucesores[i].empty())
+        continue;
+      else
+        for (const auto &elemento : ListaSucesores[i]) {
+          ElementoLista buffer;
+          buffer.j = i + 1;
+          buffer.c = elemento.c;
+          ListaPredecesores[elemento.j - 1].push_back(buffer);
+        }
+    }
   }
 
 
@@ -121,14 +132,14 @@ bool Grafo::esdirigido() const {
 // -----------------FUNCIONES------------------- //
 
 void Grafo::showadyacencia() {
-  std::cout << "NODO\n";
+  std::cout << "NODO-> Nodo:Coste\n";
   for (int i = 0; i < ListaSucesores.size(); i++) {
     std::cout << "[" << i + 1 << "] -> ";
     if (ListaSucesores[i].empty()) {
       std::cout << "null";
     }
     for (const auto &Elementos : ListaSucesores[i]) {
-      std::cout << "| " << Elementos.j << ":" << std::setw(3) << Elementos.c << " |";
+      std::cout << "| " << Elementos.j << " :" << std::setw(3) << Elementos.c << " |";
     }
     std::cout << std::endl;
   }
@@ -141,5 +152,20 @@ void Grafo::showinfo() {
   std::cout << "dirigido | nodos: " << n << " | arcos: " << m << std::endl;
   system("pause");
 }
+void Grafo::showpredecesores() {
+  std::cout << "NODO<- Nodo:Coste\n";
+  for (int i = 0; i < ListaPredecesores.size(); i++) {
+    std::cout << "[" << i + 1 << "] <- ";
+    if (ListaPredecesores[i].empty()) {
+      std::cout << "null";
+    }
+    for (const auto &Elementos : ListaPredecesores[i]) {
+      std::cout << "| " << Elementos.j << " :" << std::setw(3) << Elementos.c << " |";
+    }
+    std::cout << std::endl;
+  }
+  system("pause");
+}
+
 
 // --------------------------------------------- //

@@ -40,6 +40,7 @@ class Grafo {
 
   // funciones del menu
   void showadyacencia();
+  void showpredecesores();
   void showinfo();
 
 };
