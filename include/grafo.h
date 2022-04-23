@@ -27,12 +27,12 @@ class Grafo {
   std::vector<NodeAdyacence> MatrizAdyacencia;    // Adyacencia y costes.
 
   void destroy();
-  void build(std::ifstream& file, const std::string& pathname);
+  void build(std::ifstream &file, const std::string &pathname);
 
  public:
   //Constructores y modificadores de la clase
-  explicit Grafo(const std::string& filepath);
-  void actualizargrafo(std::string& nuevografo);
+  explicit Grafo(const std::string &filepath);
+  void actualizargrafo(std::string &nuevografo);
 
   // getters
   bool esdirigido() const;
@@ -43,5 +43,18 @@ class Grafo {
   void showpredecesores();
   void showinfo();
 
+  void dfs(unsigned int i,
+           std::vector<NodeAdyacence> L,
+           std::vector<bool> &visitado,
+           std::vector<unsigned int> &prenum,
+           unsigned int &prenum_ind,
+           std::vector<unsigned int> &postnum,
+           unsigned int &postnum_ind);
+
+  void RecorridoProfundidad();
+  void bfs(unsigned int i,
+           std::vector<NodeAdyacence> L,
+           std::vector<unsigned int> &pred,
+           std::vector<unsigned int> &dist);
 };
 #endif //OPTI_GRAFO_H

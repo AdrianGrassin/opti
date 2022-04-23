@@ -24,6 +24,7 @@ void menu(bool dirigido, char &opcion, const std::string &grafo) {
     "║ i. Mostrar [i]nfo                           ║\n"
     "║ s. Mostrar [s]ucesores                      ║\n"
     "║ p. Mostrar [p]redecesores                   ║\n"
+    "║ r. Mostrar recorriedo en p[r]ofundidad      ║\n"
     "╚═════════════════════════════════════════════╝\n"
     "OPCION > ";
     std::cin >> opcion;
@@ -39,6 +40,7 @@ void menu(bool dirigido, char &opcion, const std::string &grafo) {
     "║ MENU DE GRAFO                               ║\n"
     "║ i. Mostrar [i]nfo                           ║\n"
     "║ a. Mostrar [a]dyacencia                     ║\n"
+    "║ r. Mostrar recorriedo en p[r]ofundidad      ║\n"
     "╚═════════════════════════════════════════════╝\n"
     "OPCION > ";
     std::cin >> opcion;

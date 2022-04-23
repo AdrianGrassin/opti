@@ -74,6 +74,10 @@ int main(int argc, char **argv) {
             std::cout << "No soportado para este tipo de grafo.";
           }
           break;
+        case 'r':
+          G.RecorridoProfundidad();
+          break;
+
         case 'q':
           typewrite("Saliendo del programa...");
           break;
