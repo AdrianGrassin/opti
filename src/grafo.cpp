@@ -37,54 +37,33 @@ void Grafo::build(std::ifstream &file, const std::string &pathname) {
     ListaSucesores[i - 1].push_back(buffer);  // (i - 1) porque se tiene que la posición 0 = nodo 1
   }
 
+  // siempre vamos a crear el vector de LP porque nos sera util en ambos casos
+
+  ListaPredecesores.resize(n);
+  for (i = 0; i < ListaSucesores.size(); i++) {
+    if (ListaSucesores[i].empty())
+      continue;
+    else
+      for (const auto &elemento : ListaSucesores[i]) {
+        ElementoLista buffer;
+        buffer.j = i + 1;
+        buffer.c = elemento.c;
+        ListaPredecesores[elemento.j - 1].push_back(buffer);
+      }
+  }
+
+  // si el grafo no es dirigido entonces se tomaran los predecesores y se pondran al final de cada lista de 'sucesores'.
+  // luego simplemente la borramos y listo.
   if (!dirigido) {
-    for (i = 0; i < ListaSucesores.size(); i++) {
-      if (ListaSucesores[i].empty())
-        continue;
-      else
-        for (const auto &elemento : ListaSucesores[i]) {
-          ElementoLista buffer;
-          buffer.j = i + 1;
-          buffer.c = elemento.c;
-          ListaSucesores[elemento.j - 1].push_back(buffer);
-        }
-    }
-
-    // esto es un poco feo pero lo que hace es por cada fila contar las veces que se repiten los elementos y luego
-    // se les hace pop back (ya que siempre van a ser los ultimos elementos).
-
-    unsigned popbackcount;
-    for (i = 0; i < ListaSucesores.size(); i++) {
-      for (int j = 0; j < ListaSucesores[i].size(); j++) {
-        for (k = j + 1; k < ListaSucesores[i].size(); k++) {
-          if(ListaSucesores[i][j].j == ListaSucesores[i][k].j){
-            popbackcount++;
-          }
-        }
+    for (i = 0; i < ListaPredecesores.size(); i++) {
+      for (int j = 0; j < ListaPredecesores[i].size(); j++) {
+        ListaSucesores[i].push_back(ListaPredecesores[i][j]);
       }
-      for(int l = 0; l < popbackcount; l++){
-        ListaSucesores[i].pop_back();
-      }
-      popbackcount = 0;
     }
+    ListaPredecesores.resize(0);
   }
 
-  else { // construir LP
-    ListaPredecesores.resize(n);
-    for (i = 0; i < ListaSucesores.size(); i++) {
-      if (ListaSucesores[i].empty())
-        continue;
-      else
-        for (const auto &elemento : ListaSucesores[i]) {
-          ElementoLista buffer;
-          buffer.j = i + 1;
-          buffer.c = elemento.c;
-          ListaPredecesores[elemento.j - 1].push_back(buffer);
-        }
-    }
-  }
-
-
+  // en caso contrario tenemos creada la lista de predecesores y no hace falta hacer nada mas.
 }
 
 Grafo::Grafo(const std::string &filepath) {
