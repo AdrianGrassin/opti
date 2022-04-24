@@ -302,19 +302,3 @@ void Grafo::RecorridoAmplitud() {
 }
 
 // --------------------------------------------- //
-
-/**
-*   metodo amplitud:
- *
- *   recorrer los nodos tal que:
- *      empiezas en el nodo introducido.
- *      vector de vectores:
- *          - se comprueba si se han visitado. pushback nodos hijos en distancia + 1.
- *          - una vez acaba la cola se hace pushback de nodos hijos en la cola.
- *          - si esta vacia -> fin.
- *          - si no, repetir proceso.
- *
- *
- *
- *
-*/
