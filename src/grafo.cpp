@@ -166,14 +166,14 @@ void Grafo::dfs(unsigned i, std::vector<NodeAdyacence> L, std::vector<bool> &vis
 
 void Grafo::RecorridoProfundidad() {
   unsigned i(0), prenum_ind(0), postnum_ind(0);
-  std::vector<bool> visitado(ListaPredecesores.size(), false);
+  std::vector<bool> visitado(ListaSucesores.size(), false);
   std::vector<unsigned> prenum;
   std::vector<unsigned> postnum;
 
   // Si hace falta cambiarlo, aqui se puede hacer un if para poner por que lista iterar.
   std::vector<NodeAdyacence> List(ListaSucesores);
 
-  std::cout << "Introduce el nodo desde donde partira la busqueda [" << " 1 - " << ListaPredecesores.size() << "] :";
+  std::cout << "Introduce el nodo desde donde partira la busqueda [" << " 1 - " << ListaSucesores.size() << "] :";
   std::cin >> i;
 
   dfs(i - 1, List, visitado, prenum, prenum_ind, postnum, postnum_ind);
@@ -246,7 +246,7 @@ void Grafo::RecorridoAmplitud() {
   // Si hace falta cambiarlo, aqui se puede hacer un if para poner por que lista iterar.
   std::vector<NodeAdyacence> List(ListaSucesores);
 
-  std::cout << "Introduce el nodo desde donde partira la busqueda [" << " 1 - " << ListaPredecesores.size() << "] :";
+  std::cout << "Introduce el nodo desde donde partira la busqueda [" << " 1 - " << ListaSucesores.size() << "] :";
   std::cin >> i;
 
   int initialnode(i - 1);
@@ -302,19 +302,3 @@ void Grafo::RecorridoAmplitud() {
 }
 
 // --------------------------------------------- //
-
-/**
-*   metodo amplitud:
- *
- *   recorrer los nodos tal que:
- *      empiezas en el nodo introducido.
- *      vector de vectores:
- *          - se comprueba si se han visitado. pushback nodos hijos en distancia + 1.
- *          - una vez acaba la cola se hace pushback de nodos hijos en la cola.
- *          - si esta vacia -> fin.
- *          - si no, repetir proceso.
- *
- *
- *
- *
-*/
