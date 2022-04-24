@@ -77,7 +77,9 @@ int main(int argc, char **argv) {
         case 'r':
           G.RecorridoProfundidad();
           break;
-
+        case 'm':
+          G.RecorridoAmplitud();
+          break;
         case 'q':
           typewrite("Saliendo del programa...");
           break;

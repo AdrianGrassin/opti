@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <queue>
+#include <stack>
 #include "../include/grafo.h"
 
 // -----------CONSTRUCTORES-Y-MAS--------------- //
@@ -171,7 +173,6 @@ void Grafo::RecorridoProfundidad() {
   // Si hace falta cambiarlo, aqui se puede hacer un if para poner por que lista iterar.
   std::vector<NodeAdyacence> List(ListaSucesores);
 
-
   std::cout << "Introduce el nodo desde donde partira la busqueda [" << " 1 - " << ListaPredecesores.size() << "] :";
   std::cin >> i;
 
@@ -204,9 +205,116 @@ void Grafo::RecorridoProfundidad() {
 
 }
 
-void Grafo::bfs( unsigned i, std::vector<NodeAdyacence> L, std::vector<unsigned> &pred, std::vector<unsigned> &dist) {
+void Grafo::bfs(int i, std::vector<NodeAdyacence> L, std::vector<int> &dist, std::vector<int> &pred) {
+  std::vector<bool> visitado(n, false);
+  visitado[i - 1] = true;
 
+  std::queue<unsigned> cola;
+  cola.push(i - 1);
+
+  unsigned distancia = 1;
+  unsigned pisoactual(1), pisosig(0);
+
+  while (!cola.empty()) {
+    unsigned k = cola.front();
+    cola.pop();
+
+    for (auto &j : L[k]) {
+      if (!visitado[j.j - 1]) {
+        visitado[j.j - 1] = true;
+        cola.push(j.j - 1);
+        pred[j.j - 1] = k;
+        dist[j.j - 1] = distancia;
+        pisosig++;
+      }
+    }
+
+    pisoactual--;
+    if (pisoactual == 0) {
+      distancia++;
+      pisoactual = pisosig;
+      pisosig = 0;
+    }
+  }
+}
+
+void Grafo::RecorridoAmplitud() {
+  int i;
+  std::vector<int> dist(n, -1);
+  std::vector<int> pred(n, -1);
+
+  // Si hace falta cambiarlo, aqui se puede hacer un if para poner por que lista iterar.
+  std::vector<NodeAdyacence> List(ListaSucesores);
+
+  std::cout << "Introduce el nodo desde donde partira la busqueda [" << " 1 - " << ListaPredecesores.size() << "] :";
+  std::cin >> i;
+
+  int initialnode(i - 1);
+
+  dist[i - 1] = 0;
+
+  bfs(i, List, dist, pred);
+
+  int maxdist(0);
+  // bucle para encontrar la mayor distancia
+  for (i = 0; i < n; i++) {
+    if (dist[i] > maxdist)
+      maxdist = dist[i];
+  }
+
+  std::cout << "Distancia entre nodos: \n";
+  for (i = 0; i <= maxdist; i++) {
+    std::cout << "[" << i << "] :";
+    for (int j = 0; j < n; j++) {
+      if (dist[j] == i) {
+        std::cout << "| " << j + 1 << " | ";
+      }
+    }
+    std::cout << std::endl;
+  }
+
+  std::cout << "\nRamas para cada nodo:\n";
+  for (i = 0; i < n; i++) {
+    int element = i;
+    std::stack<int> pila;
+    std::cout << "nodo [" << i + 1 << "] :";
+
+    while (element != initialnode && pred[element] != -1) {
+      pila.push(element);
+      element = pred[element];
+    }
+
+    if (pila.empty()) {
+      std::cout << "no conecta \n";
+    } else {
+      pila.push((int)initialnode);
+      while (pila.size() > 1) {
+        std::cout << pila.top() + 1 << " <- ";
+        pila.pop();
+      }
+      std::cout << pila.top() + 1 << " \n";
+      pila.pop();
+    }
+  }
+
+  system("pause");
 
 }
 
 // --------------------------------------------- //
+
+/**
+*   metodo amplitud:
+ *
+ *   recorrer los nodos tal que:
+ *      empiezas en el nodo introducido.
+ *      vector de vectores:
+ *          - se comprueba si se han visitado. pushback nodos hijos en distancia + 1.
+ *          - una vez acaba la cola se hace pushback de nodos hijos en la cola.
+ *          - si esta vacia -> fin.
+ *          - si no, repetir proceso.
+ *
+ *
+ *
+ *
+*/

@@ -50,11 +50,12 @@ class Grafo {
            unsigned int &prenum_ind,
            std::vector<unsigned int> &postnum,
            unsigned int &postnum_ind);
-
   void RecorridoProfundidad();
-  void bfs(unsigned int i,
+
+  void bfs(int i,
            std::vector<NodeAdyacence> L,
-           std::vector<unsigned int> &pred,
-           std::vector<unsigned int> &dist);
+           std::vector<int>& dist,
+           std::vector<int>& pred);
+  void RecorridoAmplitud();
 };
 #endif //OPTI_GRAFO_H
