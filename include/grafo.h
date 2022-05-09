@@ -12,6 +12,11 @@ typedef struct {
   int c;      // peso
 } ElementoLista;
 
+typedef struct {
+  unsigned extremo1, extremo2;
+  int peso;
+} AristaPesada;
+
 typedef std::vector<ElementoLista> NodeAdyacence;  // vector de nodos adyacentes multiproposito
 
 class Grafo {
@@ -57,5 +62,7 @@ class Grafo {
            std::vector<int>& dist,
            std::vector<int>& pred);
   void RecorridoAmplitud();
+
+  void kruskal();
 };
 #endif //OPTI_GRAFO_H

@@ -301,4 +301,189 @@ void Grafo::RecorridoAmplitud() {
 
 }
 
+
+void Grafo::kruskal() {
+  std::vector<AristaPesada> Aristas;
+
+  //Cargamos todas las aristas de la lista de adyacencia en el vector auxiliar aristas
+
+
+  Aristas.resize(m);
+
+  unsigned k = 0;
+  for (unsigned i = 0; i < n; i++) {
+    for (unsigned j = 0; j < ListaSucesores[i].size(); j++) {
+      if (i < ListaSucesores[i][j].j) {
+        Aristas[k].extremo1 = i + 1;
+        Aristas[k].extremo2 = ListaSucesores[i][j].j;
+        Aristas[k++].peso = ListaSucesores[i][j].c;
+      }
+    }
+  }
+
+// esto es para el caso en el que también se quiera hacer en grafos dirigidos pero sin tomar en cuenta que son dirigidos
+  if (dirigido) {
+    for (unsigned i = 0; i < n; i++) {
+      for (unsigned j = 0; j < ListaPredecesores[i].size(); j++) {
+        if (i < ListaPredecesores[i][j].j) {
+          Aristas[k].extremo1 = i + 1;
+          Aristas[k].extremo2 = ListaPredecesores[i][j].j;
+          Aristas[k++].peso = ListaPredecesores[i][j].c;
+        }
+      }
+    }
+  }
+// ---------------------------------------------------------------------------------------------------------------------
+
+  AristaPesada aux;  // Esto es un buffer para hacer un algoritmo de ordenación por intercambio
+
+  for (unsigned l = 0; l < Aristas.size(); l++) {
+    for (unsigned x = l + 1; x < Aristas.size(); x++) {
+      if (Aristas[l].peso > Aristas[x].peso) {
+        aux = Aristas[l];
+        Aristas[l] = Aristas[x];
+        Aristas[x] = aux;
+
+      }
+    }
+  }
+
+  int pesoMST = 0; // Inicializamos el peso de la solución
+  int br = 0;      // Break
+
+
+  std::vector<bool> comp; // Vector de booleanos para comprobar una serie de condiciones
+  comp.resize(4, false);
+
+  // comp[0] = comprobación de que el nodo del primer extremo ya se haya usado
+  // comp[1] = comprobación de que el nodo del segundo extremo ya se haya usado
+  // comp[2] = comprobación de que la arista a añadir no crea un bucle
+  // comp[3] = comprobación de que el primer extremo de la arista no coincide con un elemento sye
+  // comp[4] = comprobación de que el segundo extremo no coincide con el siguiente elemento de sye
+
+
+  int q = 1;                      // Numero de aristas visitado
+  std::vector<unsigned> sye;      // Vector salidas y entradas
+
+  std::vector<unsigned> repe;     // Vector para comprobación de bucles
+  repe.resize(n);
+  int rh = 0;                     //repe head//
+
+  std::vector<unsigned> ady1;     // Vector que utilizaré para comprobar las adyacencias del extremo
+
+  do {
+    /* Implementamos el algoritmo de Kruskal */
+
+    for (auto &Arista : Aristas) {    // bucle principal que recorre cada arista
+      for (unsigned int& a : repe) {   // se recorre repe para comprobar que la arista
+        if (Arista.extremo1 == a) {
+          comp[0] = true;
+          break;
+        }
+      }
+
+      if (!comp[0]) {
+        repe[rh] = Arista.extremo1;
+        rh++;
+      } // si el primer extremo de la arista no está en el vector repe, se añade en la cabeza de repe y se sube rh de 1
+
+      sye.push_back(Arista.extremo1); // añadimos el primer
+
+      for (unsigned int& b : repe) {
+        if (Arista.extremo2 == b) {
+          comp[1] = true;
+          break;
+        }
+      }
+
+      if (!comp[1]) {
+        repe[rh] = Arista.extremo2;
+        rh++;
+      }
+
+      sye.push_back(Arista.extremo2);
+
+      if (comp[0] && comp[1]) {                         // si ambos han sido "activados" se tendrán que hacer otras
+        // comprobaciones.
+        for (unsigned f = 0; f < sye.size() - 2; f++) { // en este bucle se comprueba que los extremos no correspondan
+          // a ningún elemento dentro del vector repe
+
+          if (Arista.extremo1 == sye[f]) {              //  si el primer nodo corresponde a un elemento del vector sye
+            comp[3] = true;                             //  se activa comp3,
+            if (Arista.extremo2 == sye[f + 1])          //  en ese caso, se comprueba que el siguiente elemento de sye
+              comp[4] = true;                           //  y en caso de que se corresponda comp4 se activa
+          }
+          if (comp[3] && comp[4])                       //  si se ha cumplido en algún momento la condición de arriba
+            comp[2] = true;                             //  se activa comp2 lo que indica que si insertasemos la arista
+        }                                               //  como solución se forma un bucle. Más tarde comprobaremos
+        //  comp2 para descartar o no la arista.
+
+        ady1.push_back(Arista.extremo1);                //  se hace push back en ady1
+        unsigned o = 0;                                 //  instanciamos o que es
+
+        for (unsigned f = 0; f < sye.size() - 2; f++) {  // este bucle hará una lista de adyacencia
+
+          if (ady1[o] == sye[f]) {                      //
+
+            if ((f + 1) % 2 == 0) {                     // si f + 1 es par se hace push back de sye f - 1
+              ady1.push_back(sye[(f - 1)]);
+            } else {
+              ady1.push_back(sye[(f + 1)]);             // en caso distinto se hace pushback de sye f + 1
+            }
+
+            if (ady1.back() == Arista.extremo2) {       // si el nodo insertado es igual al extremo2 tendremos un bucle
+              comp[2] = true;                           // y quitaremos de la lista de salidas y entradas los extremos
+              sye.pop_back();                           // de la arista introducida
+              sye.pop_back();
+              br = 1;                                   // se activa el break que va a salir de este procedimiento y
+            }                                           // pasar al siguiente nodo
+
+            if (br == 1)
+              break;
+
+            for (unsigned v = 0; v < ady1.size() - 1; v++) {  // se hace popback en ady
+              if (ady1.back() == ady1[v])
+                ady1.pop_back();
+            }
+          }
+          // aquí se hacen comprobaciones
+          if (br == 1) { break; }
+          if (o == ady1.size() && f == sye.size() - 3) { break; }
+          if (f == sye.size() - 3) {
+            f = -1;
+            o++;
+          }
+        }
+
+        if (!comp[2]) {
+          std::cout << "Arista numero " << q << " incorporada (" << Arista.extremo1 << ", " << Arista.extremo2
+                    << "), con peso " << Arista.peso << std::endl;
+          pesoMST += Arista.peso;
+          q++;
+          break;
+        }
+        q++;
+      } else {
+        std::cout << "Arista numero " << q << " incorporada (" << Arista.extremo1 << ", " << Arista.extremo2
+                  << "), con peso " << Arista.peso << std::endl;
+        pesoMST += Arista.peso;
+        q++;
+      }
+
+      std::fill(comp.begin(), comp.end(), false);
+      ady1.clear();
+      br = 0;
+
+    }
+
+  } while (q < n && q <= m);
+
+  if (q == n) {
+    std::cout << "El peso del arbol generador de minimo coste es " << pesoMST << std::endl;
+  } else {
+    std::cout << "El grafo no es conexo, y el bosque generador de minimo coste tiene peso " << pesoMST << std::endl;
+  }
+
+  system("pause");
+}
 // --------------------------------------------- //

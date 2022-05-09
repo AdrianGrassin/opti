@@ -80,6 +80,9 @@ int main(int argc, char **argv) {
         case 'm':
           G.RecorridoAmplitud();
           break;
+        case 'k':
+          G.kruskal();
+          break;
         case 'q':
           typewrite("Saliendo del programa...");
           break;
