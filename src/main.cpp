@@ -21,7 +21,7 @@
 
 int main(int argc, char **argv) {
   SetConsoleOutputCP( 65001 );
-//typewrite("Grafos 2022: Adrian Grassin -> Practica 1");
+  //typewrite("Grafos 2022: Adrian Grassin -> Practica 2");
   Sleep(500);
 
   std::string pathtofile;
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
           G.RecorridoAmplitud();
           break;
         case 'k':
-          G.kruskal();
+          G.kruskal2();
           break;
         case 'q':
           typewrite("Saliendo del programa...");

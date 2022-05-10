@@ -303,10 +303,7 @@ void Grafo::RecorridoAmplitud() {
 
 void Grafo::kruskal() {
   std::vector<AristaPesada> Aristas;
-
   //Cargamos todas las aristas de la lista de adyacencia en el vector auxiliar aristas
-
-
   Aristas.resize(m);
 
   unsigned k = 0;
@@ -374,7 +371,7 @@ void Grafo::kruskal() {
     /* Implementamos el algoritmo de Kruskal */
 
     for (auto &Arista : Aristas) {    // bucle principal que recorre cada arista
-      for (unsigned int &a : repe) {   // se recorre repe para comprobar que la arista
+      for (unsigned int &a : repe) {      // se recorre repe para comprobar que la arista
         if (Arista.extremo1 == a) {
           comp[0] = true;
           break;
@@ -490,7 +487,6 @@ void Grafo::kruskal() {
           q++;
           break;
         }
-        q++;
       } else {
         std::cout << "Arista numero " << q << " incorporada (" << Arista.extremo1 << ", " << Arista.extremo2
                   << "), con peso " << Arista.peso << std::endl;
@@ -501,10 +497,64 @@ void Grafo::kruskal() {
       std::fill(comp.begin(), comp.end(), false);
       ady1.clear();
       br = 0;
-
     }
 
   } while (q < n && q <= m);
+
+  if (q == n) {
+    std::cout << "El peso del arbol generador de minimo coste es " << pesoMST << std::endl;
+  } else {
+    std::cout << "El grafo no es conexo, y el bosque generador de minimo coste tiene peso " << pesoMST << std::endl;
+  }
+
+  system("pause");
+}
+
+void Grafo::kruskal2() {
+  unsigned q = 0;
+  int pesoMST = 0;
+  std::vector<AristaPesada> Aristas;
+  Aristas.resize(m);
+// creamos el vec
+  unsigned k = 0;
+  for (unsigned i = 0; i < n; i++) {
+    for (unsigned j = 0; j < ListaSucesores[i].size(); j++) {
+      if (i < ListaSucesores[i][j].j) {
+        Aristas[k].extremo1 = i + 1;
+        Aristas[k].extremo2 = ListaSucesores[i][j].j;
+        Aristas[k++].peso = ListaSucesores[i][j].c;
+      }
+    }
+  }
+// creamos el vector de componentes conexas
+  std::vector<unsigned> Raiz;
+  Raiz.resize(n);
+  for (unsigned q = 0; q < n; q++) {
+    Raiz[q] = q;
+  }
+
+// ordenamos el vec y aplicamos el criterio de seleccion
+  AristaPesada aux;  // buff
+  for (unsigned l = 0; l < Aristas.size(); l++) {
+    for (unsigned x = l + 1; x < Aristas.size(); x++) {
+      if (Aristas[l].peso > Aristas[x].peso) {
+        aux = Aristas[l];
+        Aristas[l] = Aristas[x];
+        Aristas[x] = aux;
+      }
+    }
+    if (Raiz[Aristas[l].extremo1 - 1] != Raiz[Aristas[l].extremo2 - 1]) {
+      for (auto &Arista : Raiz) {
+        if (Arista == Aristas[l].extremo1 - 1) {
+          Arista = Raiz[Aristas[l].extremo2 - 1];
+        }
+      }
+      std::cout << "Arista numero " << l << " incorporada (" << Aristas[l].extremo1 << ", " << Aristas[l].extremo2
+                << "), con peso " << Aristas[l].peso << std::endl;
+      pesoMST += Aristas[l].peso;
+      q++;
+    }
+  }
 
   if (q == n) {
     std::cout << "El peso del arbol generador de minimo coste es " << pesoMST << std::endl;

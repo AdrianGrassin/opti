@@ -64,5 +64,8 @@ class Grafo {
   void RecorridoAmplitud();
 
   void kruskal();
+
+  void kruskal2();
+
 };
 #endif //OPTI_GRAFO_H
