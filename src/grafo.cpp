@@ -215,11 +215,11 @@ void Grafo::bfs(int i, std::vector<NodeAdyacence> L, std::vector<int> &dist, std
   unsigned distancia = 1;
   unsigned pisoactual(1), pisosig(0);
 
-  while (!cola.empty()) {
-    unsigned k = cola.front();
-    cola.pop();
-
-    for (auto &j : L[k]) {
+  while (!cola.empty()) {                   // creo una cola en la que voy a ir metiendo cada piso
+    unsigned k = cola.front();              // cada vez que se ejecute el while se van a ir obteniendo los hijos y
+    cola.pop();                             // poniendo al final de la cola, además con las variables de pisoactual
+    // y pisosig sabremos cuantos elementos hay por piso y así ir explorando
+    for (auto &j : L[k]) {                  // el árbol de nodos.
       if (!visitado[j.j - 1]) {
         visitado[j.j - 1] = true;
         cola.push(j.j - 1);
@@ -230,10 +230,10 @@ void Grafo::bfs(int i, std::vector<NodeAdyacence> L, std::vector<int> &dist, std
     }
 
     pisoactual--;
-    if (pisoactual == 0) {
-      distancia++;
-      pisoactual = pisosig;
-      pisosig = 0;
+    if (pisoactual == 0) {                  // si no quedan nodos del piso actual se incrementa la distancia y el
+      distancia++;                          // contador de elementos en el piso se cambia por los del piso siguiente
+      pisoactual = pisosig;                 // y el piso siguiente se pone a 0 ya que aún no se ha explorado
+      pisosig = 0;                          // y así hasta terminar de encontrar los nodos en el grafo
     }
   }
 }
@@ -287,7 +287,7 @@ void Grafo::RecorridoAmplitud() {
     if (pila.empty()) {
       std::cout << "no conecta \n";
     } else {
-      pila.push((int)initialnode);
+      pila.push((int) initialnode);
       while (pila.size() > 1) {
         std::cout << pila.top() + 1 << " <- ";
         pila.pop();
@@ -300,7 +300,6 @@ void Grafo::RecorridoAmplitud() {
   system("pause");
 
 }
-
 
 void Grafo::kruskal() {
   std::vector<AristaPesada> Aristas;
@@ -363,19 +362,19 @@ void Grafo::kruskal() {
 
 
   int q = 1;                      // Numero de aristas visitado
-  std::vector<unsigned> sye;      // Vector salidas y entradas
+  std::vector<unsigned> sye;      // vector en el que se encuentran los nodos del camino + la arista a insertar
 
-  std::vector<unsigned> repe;     // Vector para comprobación de bucles
+  std::vector<unsigned> repe;     // Lista de adyacencia de los nodos del camino minimo
   repe.resize(n);
   int rh = 0;                     //repe head//
 
-  std::vector<unsigned> ady1;     // Vector que utilizaré para comprobar las adyacencias del extremo
+  std::vector<unsigned> ady1;     // Lista de adyacencia de un posible camino no conexo
 
   do {
     /* Implementamos el algoritmo de Kruskal */
 
     for (auto &Arista : Aristas) {    // bucle principal que recorre cada arista
-      for (unsigned int& a : repe) {   // se recorre repe para comprobar que la arista
+      for (unsigned int &a : repe) {   // se recorre repe para comprobar que la arista
         if (Arista.extremo1 == a) {
           comp[0] = true;
           break;
@@ -387,9 +386,9 @@ void Grafo::kruskal() {
         rh++;
       } // si el primer extremo de la arista no está en el vector repe, se añade en la cabeza de repe y se sube rh de 1
 
-      sye.push_back(Arista.extremo1); // añadimos el primer
+      sye.push_back(Arista.extremo1); // añadimos el primer extremo
 
-      for (unsigned int& b : repe) {
+      for (unsigned int &b : repe) {
         if (Arista.extremo2 == b) {
           comp[1] = true;
           break;
@@ -401,55 +400,84 @@ void Grafo::kruskal() {
         rh++;
       }
 
-      sye.push_back(Arista.extremo2);
+      sye.push_back(Arista.extremo2); // añadimos el segundo extremo
 
-      if (comp[0] && comp[1]) {                         // si ambos han sido "activados" se tendrán que hacer otras
-        // comprobaciones.
-        for (unsigned f = 0; f < sye.size() - 2; f++) { // en este bucle se comprueba que los extremos no correspondan
-          // a ningún elemento dentro del vector repe
+      /**
+       * @brief :
+       *
+       * 1)  si ambos nodos están en la lista de adyacencia del camino habrá que comprobar si no crean un bucle mínimo
+       *     en este bucle se comprueba que ambos extremos correspondan a la vez, en ese caso se descarta la arista.
+       *
+       * 2)  si se ha cumplido en algún momento la condición de arriba se activa comp2 lo que indica que si insertásemos
+       *     la arista como solución se forma un bucle. Más tarde comprobaremos comp2 para descartar o no la arista.
+       *
+       * 3)  Empezamos la lista de adyacencia del primer extremo haciendo un push back del mismo
+       *
+       * 4)  Este bucle hará una lista de adyacencia ignorando los dos últimos elementos introducidos
+       *
+       * 5)  La lógica tras las siguientes comparaciones posicionales con el vector de sye es que:
+       *         - En las posiciones pares están los extremos1(inicio).
+       *         - En las posiciones impares están los extremos2 (destino).
+       *     Es así que obtenemos la adyacencia que conforma un camino desde el extremo1.
+       *     Si en algún momento el nuevo nodo que hemos insertado equivale al extremo2 quiere decir que hay un bucle
+       *     y que podemos desechar la arista con lo que pasamos al paso 6)
+       *
+       * 6)  Popeamos de la lista los elementos que estábamos comprobando y activamos el break.
+       *
+       * 7)  Limpiamos el vector de adyacencia en caso de haber metido un elemento repetido en el final.
+       *
+       * 8)  Se comprueba si hay que seguir haciendo comprobaciones
+       *
+       * 9)  Si se ha llegado al final de ady y al final de sye (ignorando los elementos introducidos) hemos llegado al
+       *     final y se puede salir. ( normalmente en este caso la arista ha sido aceptada ).
+       *
+       * 10) Cuando se llega al final de sye simplemente se pasa al siguiente elemento y se reincia f.
+       *
+       * -|El resto ya es imprimir la arista en el caso de que las comprobaciones hayan resultado correctas|-
+       */
 
-          if (Arista.extremo1 == sye[f]) {              //  si el primer nodo corresponde a un elemento del vector sye
-            comp[3] = true;                             //  se activa comp3,
-            if (Arista.extremo2 == sye[f + 1])          //  en ese caso, se comprueba que el siguiente elemento de sye
-              comp[4] = true;                           //  y en caso de que se corresponda comp4 se activa
+      if (comp[0] && comp[1]) {                                         /*  1)  */
+
+        for (unsigned f = 0; f < sye.size() - 2; f++) {
+          if (Arista.extremo1 == sye[f]) {
+            comp[3] = true;
+            if (Arista.extremo2 == sye[f + 1])
+              comp[4] = true;
           }
-          if (comp[3] && comp[4])                       //  si se ha cumplido en algún momento la condición de arriba
-            comp[2] = true;                             //  se activa comp2 lo que indica que si insertasemos la arista
-        }                                               //  como solución se forma un bucle. Más tarde comprobaremos
-        //  comp2 para descartar o no la arista.
 
-        ady1.push_back(Arista.extremo1);                //  se hace push back en ady1
-        unsigned o = 0;                                 //  instanciamos o que es
+          if (comp[3] && comp[4])                                       /*  2)  */
+            comp[2] = true;
+        }
 
-        for (unsigned f = 0; f < sye.size() - 2; f++) {  // este bucle hará una lista de adyacencia
+        ady1.push_back(Arista.extremo1);                                /*  3)  */
+        unsigned o = 0;
 
-          if (ady1[o] == sye[f]) {                      //
-
-            if ((f + 1) % 2 == 0) {                     // si f + 1 es par se hace push back de sye f - 1
+        for (unsigned f = 0; f < sye.size() - 2; f++) {                 /*  4)  */
+          if (ady1[o] == sye[f]) {                                      /*  5)  */
+            if ((f + 1) % 2 == 0) {
               ady1.push_back(sye[(f - 1)]);
             } else {
-              ady1.push_back(sye[(f + 1)]);             // en caso distinto se hace pushback de sye f + 1
+              ady1.push_back(sye[(f + 1)]);
             }
 
-            if (ady1.back() == Arista.extremo2) {       // si el nodo insertado es igual al extremo2 tendremos un bucle
-              comp[2] = true;                           // y quitaremos de la lista de salidas y entradas los extremos
-              sye.pop_back();                           // de la arista introducida
+            if (ady1.back() == Arista.extremo2) {                       /*  6)  */
+              comp[2] = true;
               sye.pop_back();
-              br = 1;                                   // se activa el break que va a salir de este procedimiento y
-            }                                           // pasar al siguiente nodo
+              sye.pop_back();
+              br = 1;
+            }
 
             if (br == 1)
               break;
 
-            for (unsigned v = 0; v < ady1.size() - 1; v++) {  // se hace popback en ady
+            for (unsigned v = 0; v < ady1.size() - 1; v++) {            /*  7)  */
               if (ady1.back() == ady1[v])
                 ady1.pop_back();
             }
           }
-          // aquí se hacen comprobaciones
-          if (br == 1) { break; }
-          if (o == ady1.size() && f == sye.size() - 3) { break; }
-          if (f == sye.size() - 3) {
+          if (br == 1) break;                                           /*  8)  */
+          if (o == ady1.size() && f == sye.size() - 3) break;           /*  9)  */
+          if (f == sye.size() - 3) {                                    /*  10) */
             f = -1;
             o++;
           }
