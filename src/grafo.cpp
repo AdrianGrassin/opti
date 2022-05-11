@@ -543,10 +543,13 @@ void Grafo::kruskal2() {
         Aristas[x] = aux;
       }
     }
+
     if (Raiz[Aristas[l].extremo1 - 1] != Raiz[Aristas[l].extremo2 - 1]) {
+      unsigned cc_extremo2 = Raiz[Aristas[l].extremo2 - 1];
+      unsigned cc_extremo1 = Raiz[Aristas[l].extremo1 - 1];
       for (auto &Arista : Raiz) {
-        if (Arista == Aristas[l].extremo1 - 1) {
-          Arista = Raiz[Aristas[l].extremo2 - 1];
+        if (Arista == cc_extremo2) {
+          Arista = cc_extremo1;
         }
       }
       std::cout << "Arista numero " << l << " incorporada (" << Aristas[l].extremo1 << ", " << Aristas[l].extremo2
@@ -556,7 +559,7 @@ void Grafo::kruskal2() {
     }
   }
 
-  if (q == n) {
+  if (q == n - 1) {
     std::cout << "El peso del arbol generador de minimo coste es " << pesoMST << std::endl;
   } else {
     std::cout << "El grafo no es conexo, y el bosque generador de minimo coste tiene peso " << pesoMST << std::endl;
