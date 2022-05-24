@@ -7,8 +7,10 @@
 #include <queue>
 #include <stack>
 #include "../include/grafo.h"
+#define maxint 2147483647
 
 // -----------CONSTRUCTORES-Y-MAS--------------- //
+
 
 void Grafo::destroy() {
   if (!ListaPredecesores.empty()) {
@@ -567,4 +569,93 @@ void Grafo::kruskal2() {
 
   system("pause");
 }
+void Grafo::dijkstra() {
+  std::vector<bool> PermanentementeEtiquetado;
+  std::vector<unsigned> dist;
+  std::vector<int> pred;
+  unsigned s, candidato;
+  unsigned nodoinic;
+
+  //Inicialmente no hay ningun nodo permanentemente etiquetado
+  PermanentementeEtiquetado.resize(n,false);
+//Inicialmente todas las etiquetas distancias son infinito
+  dist.resize(n,maxint);
+  //Inicialmente el pred es null
+  pred.resize(n,-1);
+
+//Solicitamos al usuario nodo origen
+  std::cout << std::endl;
+  std::cout << "Caminos minimos: Dijkstra" << std::endl;
+  std::cout << "Nodo de partida? [1-"<< n << "]: ";
+  std::cin  >> (unsigned &) s;
+  nodoinic = s;
+
+  if(s > n) { // en caso de que el usuario no tenga luces e introduzca un número que no pertenece al conjunto de nodos
+    std::cout << "El nodo introducido no pertenece al conjunto de nodos especificado\n";
+    system("pause");
+    return;
+  }
+
+  //La etiqueta distancia del nodo origen es 0, y es su propio pred
+  dist[--s]=0;
+  pred[s] = s;
+  PermanentementeEtiquetado[s] = true;
+  candidato = s;
+
+  do
+  {
+    // etiquetamos el nodo como permanente
+    PermanentementeEtiquetado[candidato] = true;
+
+    // buscamos los sucesores de menor coste, y en caso de encontrarlo ponemos al nodo s como sucesor
+    for(int i = 0; i < ListaSucesores[s].size(); i++){
+      if(dist[ListaSucesores[s][i].j - 1] > dist[s] + ListaSucesores[s][i].c) {
+        dist[ListaSucesores[s][i].j - 1] = ListaSucesores[s][i].c + dist[s];
+        pred[ListaSucesores[s][i].j - 1] = s;
+      }
+    }
+
+    // en este bucle busccamos al canditado para la siguiente iteración
+    unsigned comp = maxint;
+    for(int i = 0; i < dist.size(); i++){
+     if(dist[i] < comp && !PermanentementeEtiquetado[i]) {
+       candidato = i;
+       comp = dist[i];
+     }
+    }
+
+    // preparamos la siguiente iteracion
+    s = candidato;
+
+  }
+  while (!PermanentementeEtiquetado[candidato]); // se hace hasta que se repite una iteración
+
+//En esta parte del código, mostramos los caminos mínimos, si los hay
+  std::cout << "Soluciones:" << std::endl;
+  for(int i = 0; i < n; i++){
+    if(i != nodoinic - 1) {
+
+      std::cout << "El camino desde el nodo " << nodoinic << " al nodo " << i+1 << " es: ";
+      MostrarCamino(nodoinic - 1, i, pred);
+
+      if(pred[i] != -1)
+        std::cout << i+1 << " de longitud: " << dist[i];
+      std::cout << std::endl;
+    }
+  }
+  system("pause");
+}
+
+
+void Grafo::MostrarCamino(int s, int i, std::vector<int>& pred) const {
+  if (pred[i] == -1) {
+    std::cout << "No hay camino desde el nodo " << s + 1 << " al nodo " << i + 1 << ".";
+    return;
+  }
+  if (i != s){
+    MostrarCamino(s, pred[i], pred);
+    std::cout << pred[i] + 1 << " - ";
+  }
+}
 // --------------------------------------------- //
+

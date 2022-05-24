@@ -20,7 +20,7 @@
 #pragma execution_character_set( "utf-8" )
 
 int main(int argc, char **argv) {
-  SetConsoleOutputCP( 65001 );
+  SetConsoleOutputCP(65001);
   //typewrite("Grafos 2022: Adrian Grassin -> Practica 2");
   Sleep(500);
 
@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 
   // argument handling
   if (argc > 1) {
-    typewrite("Argumentos detectados: Procediendo a cargar datos...");
+    //typewrite("Argumentos detectados: Procediendo a cargar datos...");
     pathtofile = argv[1];
     system("CLS");
   } else {
@@ -40,54 +40,49 @@ int main(int argc, char **argv) {
 
   try {
     Grafo G(pathtofile);
-    while(opciones != 'q'){
+    while (opciones != 'q') {
       menu(G.esdirigido(), opciones, G.pathto());
-      switch(opciones){
-        case 'c':
-          system("CLS");
+      switch (opciones) {
+        case 'c':system("CLS");
           std::cout << "Introduce la ruta al nuevo Grafo: ";
           std::cin >> pathtofile;
           G.actualizargrafo(pathtofile);
 
           break;
-        case 'i':
-          G.showinfo();
+        case 'i':G.showinfo();
           break;
         case 'a':
-          if(G.esdirigido()){
+          if (G.esdirigido()) {
             std::cout << "No soportado para este tipo de grafo.";
           } else {
             G.showadyacencia();
           }
           break;
         case 's':
-          if(G.esdirigido()){
+          if (G.esdirigido()) {
             G.showadyacencia();
           } else {
             std::cout << "No soportado para este tipo de grafo.";
           }
           break;
         case 'p':
-          if(G.esdirigido()){
-          G.showpredecesores();
+          if (G.esdirigido()) {
+            G.showpredecesores();
           } else {
             std::cout << "No soportado para este tipo de grafo.";
           }
           break;
-        case 'r':
-          G.RecorridoProfundidad();
+        case 'r':G.RecorridoProfundidad();
           break;
-        case 'm':
-          G.RecorridoAmplitud();
+        case 'm':G.RecorridoAmplitud();
           break;
-        case 'k':
-          G.kruskal2();
+        case 'k':G.kruskal2();
           break;
-        case 'q':
-          typewrite("Saliendo del programa...");
+        case 'd':G.dijkstra();
           break;
-        default:
-          std::cout << "La opción introducida no es valida, vuelve a intentarlo";
+        case 'q':typewrite("Saliendo del programa...");
+          break;
+        default:std::cout << "La opción introducida no es valida, vuelve a intentarlo";
           Sleep(500);
           break;
       }
@@ -101,7 +96,5 @@ int main(int argc, char **argv) {
     Sleep(500);
     return -1;
   }
-
-
 
 }

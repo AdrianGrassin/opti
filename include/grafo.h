@@ -59,13 +59,16 @@ class Grafo {
 
   void bfs(int i,
            std::vector<NodeAdyacence> L,
-           std::vector<int>& dist,
-           std::vector<int>& pred);
+           std::vector<int> &dist,
+           std::vector<int> &pred);
   void RecorridoAmplitud();
 
   void kruskal();
 
   void kruskal2();
+
+  void dijkstra();
+  void MostrarCamino(int s,int i, std::vector<int>& pred) const;
 
 };
 #endif //OPTI_GRAFO_H
